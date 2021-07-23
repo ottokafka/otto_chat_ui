@@ -4,13 +4,19 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+MacOs desktop app
 
-A few resources to get you started if this is your first Flutter project:
+# Developers
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Install Flutter - google how to install flutter
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+git clone
+
+On a Mac run: `flutter run -d macos`
+
+You could also run on iOS and Android
+
+This app is powered by: otto chat api 
+
+Can be found in my repo.
+
