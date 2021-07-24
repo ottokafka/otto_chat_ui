@@ -40,6 +40,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = new ScrollController();
 
   final WebSocketChannel _channel = IOWebSocketChannel.connect(
     'ws://localhost:4000/socket',
@@ -49,36 +50,37 @@ class _MyHomePageState extends State<MyHomePage> {
   var user = "otto";
 
   List messages = [];
+  late FocusNode myFocusNode;
 
   @override
   void initState() {
     super.initState();
-
     _channel.stream.listen((data) => setState(() => messages.add(data)));
-    print("2");
+    myFocusNode = FocusNode();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("2");
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(0.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 24),
             Expanded(
               child: SizedBox(
-                height: 100,
                 child: ListView.builder(
+                  controller: _scrollController,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var msg = Msg.fromJson(jsonDecode(messages[index]));
                     print(messages[index]);
+
                     return Container(
                       margin: EdgeInsets.all(4),
                       child: Align(
@@ -98,42 +100,53 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 24),
-            IconButton(
-                onPressed: () {
-                  dispose();
-                },
-                icon: Icon(Icons.exit_to_app_outlined)),
-            SizedBox(height: 24),
+            // SizedBox(height: 24),
             Form(
-              child: TextFormField(
-                controller: _controller,
-                decoration: InputDecoration(labelText: 'Send a message'),
+              child: Container(
+                color: Colors.white,
+                child: TextField(
+                    focusNode: myFocusNode,
+                    autofocus: true,
+                    controller: _controller,
+                    decoration: InputDecoration(
+                        // labelText: ' Send a message',
+                        contentPadding: EdgeInsets.all(8)),
+                    // onSubmitted allows user to press enter to sumbit
+                    onSubmitted: (value) {
+                      _sendMessage();
+                    }),
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 10),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _sendMessage,
-        tooltip: 'Send message',
-        child: Icon(Icons.send),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _sendMessage,
+      //   tooltip: 'Send message',
+      //   child: Icon(Icons.send),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  void _sendMessage() {
+  void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
       var msg =
           '{"user": "otto", "user2":"shen", "message": "${_controller.text}", "date":"$now"}';
-
+      // Add the msg to send to websocket server
       _channel.sink.add(msg);
+
+      // Clear the text field after send
+      _controller.clear();
+      // Scroll to the bottom of the page when we enter a chat message
+      await Future.delayed(Duration(milliseconds: 100));
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+
+      // After send focus cursor back onto the text input
+      myFocusNode.requestFocus();
     }
   }
-
-  // static final DateFormat formatter = DateFormat('yyyy-MM-dd');
-  // final String formatted = formatter.format(now);
 
   void selectUser() {
     var selectedUser =
