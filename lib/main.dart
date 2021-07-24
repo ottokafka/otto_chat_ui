@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -55,7 +56,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    // initialize websocket connection
     _channel.stream.listen((data) => setState(() => messages.add(data)));
+
+    // initialize focus on textField
     myFocusNode = FocusNode();
   }
 
@@ -80,6 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: (context, index) {
                     var msg = Msg.fromJson(jsonDecode(messages[index]));
                     print(messages[index]);
+
+                    // Will scroll to the bottom on loading of the chatpage
+                    Timer(
+                        Duration(milliseconds: 500),
+                        () => _scrollController.jumpTo(
+                            _scrollController.position.maxScrollExtent));
 
                     return Container(
                       margin: EdgeInsets.all(4),
