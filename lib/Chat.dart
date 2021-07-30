@@ -20,14 +20,23 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: title,
-      home: ChatSetup(
+    return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: Text('AppBar Back Button'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          )),
+      body: MaterialApp(
         title: title,
-        user: user,
-        user2: user2,
-        channel: IOWebSocketChannel.connect('ws://localhost:4000/socket',
-            headers: {"Authorization": token, "user": user, "user2": user2}),
+        home: ChatSetup(
+          title: title,
+          user: user,
+          user2: user2,
+          channel: IOWebSocketChannel.connect('ws://localhost:4000/socket',
+              headers: {"Authorization": token, "user": user, "user2": user2}),
+        ),
       ),
     );
   }
