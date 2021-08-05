@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mac_chat/Actions/add_contact.dart';
+import 'package:mac_chat/Messages.dart';
+import 'package:provider/provider.dart';
+
+import 'main.dart';
 
 class AddContact extends StatefulWidget {
   static const String id = "AddContact";
@@ -40,6 +44,7 @@ class _AddContactState extends State<AddContact> {
               setState(() {
                 _futureAlbum = addContact(_controller.text);
               });
+              // _controller.clear();
             },
             icon: Icon(Icons.add),
             label: Text("New Contact")),
@@ -48,10 +53,18 @@ class _AddContactState extends State<AddContact> {
   }
 
   FutureBuilder<User> buildFutureBuilder() {
+    final appState = Provider.of<UserState>(context);
+
     return FutureBuilder<User>(
       future: _futureAlbum,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data!.user != "") {
+            print(snapshot.data!.user);
+            appState.setContactsList(_controller.text);
+            snapshot.data!.user = "";
+            print(snapshot.data!.user);
+          }
           return Column(
             children: [
               buildColumn(),

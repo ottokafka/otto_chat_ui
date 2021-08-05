@@ -23,6 +23,12 @@ class Config {
 // contacts
 void initailizeApp() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setStringList("contacts", ['otto']);
+  var list = prefs.getStringList("contacts");
+  print(list);
+  if (list != null) {
+    print("list is not null");
+  } else {
+    await prefs.setStringList("contacts", ['otto']);
+  }
   await prefs.setString("token", token);
 }

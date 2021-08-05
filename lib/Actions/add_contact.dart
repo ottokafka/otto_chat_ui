@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:mac_chat/config.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -7,7 +8,7 @@ import '../globals.dart';
 
 class User {
   final String message;
-  final String user;
+  late String user;
 
   User({required this.message, required this.user});
 
@@ -70,7 +71,7 @@ Future<User> addContact(String name) async {
       // ["otto", "bob"]
       print(contactsList);
       await prefs.setStringList("contacts", contactsList);
-      reload = true;
+      // final appState = Provider.of<UserState>(context);
       return User.fromJson(jsonDecode(response.body));
     }
   } catch (err) {

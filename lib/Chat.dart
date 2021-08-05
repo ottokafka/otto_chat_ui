@@ -82,8 +82,6 @@ class _ChatSetupState extends State<ChatSetup> {
 
   @override
   Widget build(BuildContext context) {
-    // final appState = Provider.of<UserState>(context);
-
     var user = widget.user;
     var user2 = widget.user2;
 
@@ -221,8 +219,4 @@ class Msg {
       message: json['message'],
     );
   }
-}
-
-class UserState with ChangeNotifier {
-  UserState();
 }
