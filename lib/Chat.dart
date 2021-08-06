@@ -24,7 +24,7 @@ class Chat extends StatelessWidget {
         backgroundColor: Colors.black,
         appBar: AppBar(
             automaticallyImplyLeading: true,
-            title: Text('AppBar Back Button'),
+            title: Text(user2),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, false),
