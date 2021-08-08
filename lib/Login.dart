@@ -80,8 +80,8 @@ class _LoginUserState extends State<LoginUser> {
               decoration: InputDecoration(
                 icon: Icon(Icons.lock),
                 border: OutlineInputBorder(),
-                hintText: 'Enter your 4 digit pin 1234',
-                labelText: 'Pin',
+                hintText: 'Enter your 4 digit pin ex: 1234',
+                labelText: 'a 4 digit Pin',
               ),
             ),
             TextButton(
@@ -112,21 +112,6 @@ class _LoginUserState extends State<LoginUser> {
                     ),
                   );
                 }
-
-                secondFunction() async {
-                  // SharedPreferences prefs =
-                  //     await SharedPreferences.getInstance();
-                  // String msg = prefs.getString("msg");
-
-                  // if (msg == "Invalid Credentials") {
-                  //   print("alert message");
-                  //   alert();
-                  //   prefs.remove("msg");
-                  // }
-                  // checkToken();
-                }
-
-                secondFunction();
               },
             ),
           ],

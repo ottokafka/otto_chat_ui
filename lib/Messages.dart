@@ -7,6 +7,7 @@ import 'Actions/add_contact.dart';
 import 'Add_Contact.dart';
 import 'Chat.dart';
 import 'LoadContacts.dart';
+import 'Logout.dart';
 import 'globals.dart';
 
 // TODO: Get users for Otto from API and load them here or
@@ -29,6 +30,7 @@ class Messages extends StatelessWidget {
             SizedBox(height: 150),
 
             Expanded(child: AddContact()),
+            Logout()
           ],
         ),
       ),
