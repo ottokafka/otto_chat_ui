@@ -20,19 +20,17 @@ class Messages extends StatelessWidget {
 // Load contacts dynamically from local stoarge
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Column(
-          children: [
-            // Icon with text field
-            Expanded(child: LoadContacts()),
+    return Scaffold(
+      body: Column(
+        children: [
+          // Icon with text field
+          Expanded(child: LoadContacts()),
 
-            SizedBox(height: 150),
+          SizedBox(height: 150),
 
-            Expanded(child: AddContact()),
-            Logout()
-          ],
-        ),
+          Expanded(child: AddContact()),
+          Logout()
+        ],
       ),
     );
   }

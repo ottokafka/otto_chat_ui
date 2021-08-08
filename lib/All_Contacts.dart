@@ -14,10 +14,7 @@ class AllContacts extends StatelessWidget {
   Widget build(BuildContext context) {
     const appTitle = 'Grabing contacts';
 
-    return const MaterialApp(
-      title: appTitle,
-      home: MyHomePage(title: appTitle),
-    );
+    return MyHomePage(title: appTitle);
   }
 }
 

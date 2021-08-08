@@ -19,28 +19,24 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-            automaticallyImplyLeading: true,
-            title: Text(user2),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            )),
-        body: ChatSetup(
-          user: user,
-          user2: user2,
-          channel: IOWebSocketChannel.connect(Config.websocketIP,
-              headers: {"Authorization": token, "user": user, "user2": user2}),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: Text(user2),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          )),
+      body: ChatSetup(
+        user: user,
+        user2: user2,
+        channel: IOWebSocketChannel.connect(Config.websocketIP,
+            headers: {"Authorization": token, "user": user, "user2": user2}),
       ),
     );
   }
 }
-
-// var websocketIP = Config.websocketIP;
 
 class ChatSetup extends StatefulWidget {
   final WebSocketChannel channel;

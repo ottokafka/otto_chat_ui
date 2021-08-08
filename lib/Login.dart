@@ -11,9 +11,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoginUser(),
-    );
+    return LoginUser();
   }
 }
 
@@ -25,8 +23,8 @@ class LoginUser extends StatefulWidget {
 }
 
 class _LoginUserState extends State<LoginUser> {
-  late String email;
-  late String password;
+  String email = "";
+  String password = "";
 
 // //  String tokenUser;
   checkToken() async {
@@ -60,6 +58,9 @@ class _LoginUserState extends State<LoginUser> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextFormField(
+              validator: (value) {
+                return nameValidator(value);
+              },
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
                 filled: true,
@@ -72,7 +73,10 @@ class _LoginUserState extends State<LoginUser> {
               },
             ),
             SizedBox(height: 20),
-            TextField(
+            TextFormField(
+              validator: (value) {
+                return nameValidator(value);
+              },
               obscureText: true,
               onChanged: (value) {
                 password = value;
@@ -92,7 +96,7 @@ class _LoginUserState extends State<LoginUser> {
                 child: Text("Forgot password")),
             SizedBox(height: 20),
             CupertinoButton.filled(
-              child: Text("Login"),
+              child: Text("Login / Sign up"),
               onPressed: () async {
                 await loginUser(email, password);
                 SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -133,11 +137,19 @@ class _LoginUserState extends State<LoginUser> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () async {
-            // Navigator.pop(context);
+            Navigator.pop(context);
           },
           width: 120,
         )
       ],
     ).show();
+  }
+}
+
+String nameValidator(value) {
+  if (value.isEmpty) {
+    return 'Please enter your name';
+  } else {
+    return "";
   }
 }
