@@ -23,7 +23,7 @@ class OttoChat extends StatelessWidget {
     initailizeApp();
     // appState.setStateContacts();
     return MaterialApp(
-      initialRoute: Messages.id,
+      initialRoute: Login.id,
       routes: {
         // User
         // Chat.id: (context) => Chat(),

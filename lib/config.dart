@@ -17,6 +17,8 @@ class Config {
 
   // Add a contact
   static Uri addContactURL = Uri.parse("http://localhost:4000/addcontact");
+
+  static Uri loginURL = Uri.parse("http://localhost:4000/signin");
 }
 
 // initailize database for app

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:mac_chat/Messages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'Actions/login.dart';
 import 'Chat.dart';
 
 class Login extends StatelessWidget {
@@ -26,21 +29,25 @@ class _LoginUserState extends State<LoginUser> {
   late String password;
 
 // //  String tokenUser;
-//   checkToken() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     String tokenUser = (prefs.getString("tokenUser"));
-//     String tokenBusiness = (prefs.getString("tokenBusiness"));
-//     print("The tokenUser is: $tokenUser");
-//     if (tokenUser != null) {
-//       Navigator.pushNamed(context, DashboardUser.id);
-//     }
-//     if (tokenBusiness != null) {
-//       Navigator.pushNamed(context, DashboardBusiness.id);
-//     }
-//   }
+  checkToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("token");
+
+    print("The tokenUser is: $token");
+    if (token != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Messages(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Check token for automated login
+    checkToken();
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
@@ -56,9 +63,9 @@ class _LoginUserState extends State<LoginUser> {
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
                 filled: true,
-                icon: Icon(Icons.email),
-                hintText: 'Enter your email to login!',
-                labelText: 'Email *',
+                icon: Icon(Icons.person),
+                hintText: 'Enter your user name to login!',
+                labelText: 'Name *',
               ),
               onChanged: (value) {
                 email = value;
@@ -73,21 +80,40 @@ class _LoginUserState extends State<LoginUser> {
               decoration: InputDecoration(
                 icon: Icon(Icons.lock),
                 border: OutlineInputBorder(),
-                labelText: 'Password',
+                hintText: 'Enter your 4 digit pin 1234',
+                labelText: 'Pin',
               ),
             ),
             TextButton(
                 onPressed: () {
                   print("forgot password");
-                  Navigator.pushNamed(context, Chat.id);
+                  // Navigator.pushNamed(context, Chat.id);
                 },
                 child: Text("Forgot password")),
             SizedBox(height: 20),
             CupertinoButton.filled(
               child: Text("Login"),
-              onPressed: () {
+              onPressed: () async {
+                await loginUser(email, password);
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String? message = prefs.getString("message");
+                print(message);
+
+                if (message == "Invalid Credentials") {
+                  print("alert message");
+                  alert();
+                  prefs.remove("message");
+                } else {
+                  // Navigator.pushNamed(context, Messages.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Messages(),
+                    ),
+                  );
+                }
+
                 secondFunction() async {
-                  // await loginUser(email, password);
                   // SharedPreferences prefs =
                   //     await SharedPreferences.getInstance();
                   // String msg = prefs.getString("msg");
@@ -109,22 +135,24 @@ class _LoginUserState extends State<LoginUser> {
     );
   }
 
-  // alert() {
-  //   Alert(
-  //     context: context,
-  //     type: AlertType.error,
-  //     title: "Login",
-  //     desc: "Sorry, Invalid Credentials.",
-  //     buttons: [
-  //       DialogButton(
-  //         child: Text(
-  //           "Try Again",
-  //           style: TextStyle(color: Colors.white, fontSize: 20),
-  //         ),
-  //         onPressed: () => Navigator.pop(context),
-  //         width: 120,
-  //       )
-  //     ],
-  //   ).show();
-  // }
+  alert() {
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Login",
+      desc: "Sorry, Invalid Credentials.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Try Again",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () async {
+            // Navigator.pop(context);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
+  }
 }

@@ -32,7 +32,7 @@ class Chat extends StatelessWidget {
         body: ChatSetup(
           user: user,
           user2: user2,
-          channel: IOWebSocketChannel.connect('ws://localhost:4000/socket',
+          channel: IOWebSocketChannel.connect(Config.websocketIP,
               headers: {"Authorization": token, "user": user, "user2": user2}),
         ),
       ),
@@ -41,10 +41,6 @@ class Chat extends StatelessWidget {
 }
 
 // var websocketIP = Config.websocketIP;
-
-// Temp token delete
-var token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im90dG8iLCJpc3MiOiJtYWNjaGF0LmNvbSJ9.iFE0KK3QByXFDzgjysJ6GNSUNUZnftE24F_IV4kYgH8";
 
 class ChatSetup extends StatefulWidget {
   final WebSocketChannel channel;
