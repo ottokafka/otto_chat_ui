@@ -1,112 +1,122 @@
-import 'package:flutter/foundation.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:mac_chat/LoadContacts.dart';
+import 'package:mac_chat/Messages.dart';
+import 'package:mac_chat/SignUp.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+import 'Add_Contact.dart';
+import 'Chat.dart';
+import 'Login.dart';
+import 'config.dart';
 
-class MyApp extends StatelessWidget {
+void main() => runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserState>(create: (context) => UserState()),
+      ],
+      child: OttoChat(),
+    ));
+
+class OttoChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final title = 'Otto chat';
+    final appState = Provider.of<UserState>(context);
+    // initialize app with data from config file
+    initailizeApp();
     return MaterialApp(
-      title: title,
-      home: MyHomePage(
-        title: title,
-      ),
+      initialRoute: Login.id,
+      routes: {
+        // User
+        // Chat.id: (context) => Chat(),
+        Login.id: (context) => Login(),
+        SignUp.id: (context) => SignUp(),
+        Messages.id: (context) => Messages(),
+        AddContact.id: (context) => AddContact(),
+        LoadContacts.id: (context) => LoadContacts(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  final String title;
+// Provider
+class UserState with ChangeNotifier {
+  UserState();
 
-  MyHomePage({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+  List<String> _contactsList = ["otto"];
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
+  Future get fetchContacts async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var list = prefs.getStringList("contacts");
 
-class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController _controller = TextEditingController();
+    var futureList = Future.value(list);
 
-//  final _channel = WebSocketChannel.connect(
+    for (var i = 0; i < list!.length; i++) {
+      // check list if contact already exists if so dont add
+      if (_contactsList.contains(list[i])) {
+        print("dont add");
+      } else {
+        _contactsList.add(list[i]);
+      }
+    }
+    print("contactList $_contactsList");
 
-  final WebSocketChannel _channel = IOWebSocketChannel.connect(
-    'ws://localhost:4000/socket',
-    headers: {
-      "Authorization":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im90dG8ga2Fma2VhYSIsImlzcyI6Im1hY2NoYXQuY29tIn0.0gXbLGD09PmUQFyMXDwEFVMBwqCGFgpmxu5LS1NUwFs"
-    },
-  );
-
-  List messages = ["hi", "world"];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            StreamBuilder(
-              stream: _channel.stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  messages.add(snapshot.data);
-                }
-
-                // return Text(snapshot.hasData ? '${snapshot.data}' : '');
-                return Expanded(
-                  child: SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text('${messages[index]}'),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 24),
-            Form(
-              child: TextFormField(
-                controller: _controller,
-                decoration: InputDecoration(labelText: 'Send a message'),
-              ),
-            ),
-            SizedBox(height: 24),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _sendMessage,
-        tooltip: 'Send message',
-        child: Icon(Icons.send),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    return futureList;
   }
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      _channel.sink.add(_controller.text);
+  void setStateContacts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? list = prefs.getStringList("contacts");
+    print(list);
+
+    // _contactsList = list;
+    for (var i = 0; i < list!.length; i++) {
+      // check list if contact already exists if so dont add
+      if (_contactsList.contains(list[i])) {
+        print("dont add");
+      } else {
+        _contactsList.add(list[i]);
+      }
     }
   }
 
-  @override
-  void dispose() {
-    _channel.sink.close();
-    super.dispose();
+  void setContactsList(String user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Get saved list of contacts
+    List<String>? hddList = prefs.getStringList("contacts");
+
+    if (_contactsList.contains(user)) {
+      print("dont add user already added");
+      if (hddList!.contains(user)) {
+        print("user already saved locally");
+      }
+      // add user to contact list if not there
+    } else {
+      _contactsList.add(user);
+    }
+
+    print("on add contact this goes off rebuild");
+    print(hddList);
+    print("setuser " + user);
+    // Save our current list to the device
+    await prefs.setStringList("contacts", _contactsList);
+    print(prefs.getStringList("contacts"));
+    print("contact list updated to: ${_contactsList}");
+    notifyListeners();
+  }
+
+  List<String>? get getContactsList => _contactsList;
+
+  // Fetch login token
+  String? token;
+  fetchToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+  }
+
+  // Fetch current user name
+  String? user;
+  fetchUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    user = prefs.getString("user");
   }
 }
