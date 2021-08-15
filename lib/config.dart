@@ -1,7 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-var token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im90dG8iLCJpc3MiOiJtYWNjaGF0LmNvbSJ9.iFE0KK3QByXFDzgjysJ6GNSUNUZnftE24F_IV4kYgH8";
+// delete this token
+// var token =
+//     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im90dG8iLCJpc3MiOiJtYWNjaGF0LmNvbSJ9.iFE0KK3QByXFDzgjysJ6GNSUNUZnftE24F_IV4kYgH8";
 
 class Config {
   // in web use localhost but in android use 10.0.2.2
@@ -19,6 +20,7 @@ class Config {
   static Uri addContactURL = Uri.parse("http://localhost:4000/addcontact");
 
   static Uri loginURL = Uri.parse("http://localhost:4000/signin");
+  static Uri signupURL = Uri.parse("http://localhost:4000/create");
 }
 
 // initailize database for app
@@ -32,5 +34,5 @@ void initailizeApp() async {
   } else {
     await prefs.setStringList("contacts", ['otto']);
   }
-  await prefs.setString("token", token);
+  // await prefs.setString("token", token);
 }

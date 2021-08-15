@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 // Login User
-loginUser(email, password) async {
+signup(email, password) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   print(email);
   print(password);
@@ -15,7 +15,7 @@ loginUser(email, password) async {
     print(json);
     Map<String, String> headers = {"Content-type": "application/json"};
     var response =
-        await http.post(Config.loginURL, headers: headers, body: json);
+        await http.post(Config.signupURL, headers: headers, body: json);
 
     print('Response body: ${response.body}');
 

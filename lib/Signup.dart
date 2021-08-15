@@ -1,37 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mac_chat/Messages.dart';
-import 'package:mac_chat/SignUp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'Actions/login.dart';
+import 'Actions/signup.dart';
 import 'main.dart';
 
-class Login extends StatelessWidget {
-  static const String id = "Login";
+class SignUp extends StatelessWidget {
+  static const String id = "SignUp";
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: LoginUser(),
-        ),
-        Expanded(
-          child: SignUp(),
-        )
-      ],
-    );
+    return SignUpUser();
   }
 }
 
-class LoginUser extends StatefulWidget {
+class SignUpUser extends StatefulWidget {
   @override
-  _LoginUserState createState() => _LoginUserState();
+  _SignUpUserState createState() => _SignUpUserState();
 }
 
-class _LoginUserState extends State<LoginUser> {
+class _SignUpUserState extends State<SignUpUser> {
   String email = "";
   String password = "";
 
@@ -64,7 +55,7 @@ class _LoginUserState extends State<LoginUser> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Login"),
+            Text("Sign up"),
             TextFormField(
               validator: (value) {
                 return nameValidator(value);
@@ -104,9 +95,9 @@ class _LoginUserState extends State<LoginUser> {
                 child: Text("Forgot password")),
             SizedBox(height: 20),
             CupertinoButton.filled(
-              child: Text("Login "),
+              child: Text("SignUp / Sign up"),
               onPressed: () async {
-                await loginUser(email, password);
+                await signup(email, password);
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 String? message = prefs.getString("message");
                 print(message);
@@ -116,9 +107,9 @@ class _LoginUserState extends State<LoginUser> {
                   alert();
                   prefs.remove("message");
                 } else {
-                  // Navigator.pushNamed(context, Messages.id);
-                  await prefs.setString("user", email);
+                  await prefs.setString('user', email);
                   appState.fetchUser();
+                  // Navigator.pushNamed(context, Messages.id);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -138,7 +129,7 @@ class _LoginUserState extends State<LoginUser> {
     Alert(
       context: context,
       type: AlertType.error,
-      title: "Login",
+      title: "SignUp",
       desc: "Sorry, Invalid Credentials.",
       buttons: [
         DialogButton(

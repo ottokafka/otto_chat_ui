@@ -31,37 +31,48 @@ class _LoadContactsState extends State<LoadContacts> {
 
     return Column(
       children: [
-        Expanded(
-          child: FutureBuilder(
-              future: appState.fetchContacts,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.none &&
-                    snapshot.hasData == null) {
-                  print('project snapshot data is: ${snapshot.data}');
-                  return Text("No data mate");
-                }
-                return ListView.builder(
-                  itemCount: appState.getContactsList!.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: TextButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Chat(
-                                  user: "shen",
-                                  user2: appState.getContactsList![index],
-                                ),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.person),
-                          label: Text(appState.getContactsList![index])),
-                    );
-                  },
-                );
-              }),
+        Container(
+          child: Expanded(
+            child: FutureBuilder(
+                future: appState.fetchContacts,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.none &&
+                      snapshot.hasData == null) {
+                    print('project snapshot data is: ${snapshot.data}');
+                    return Text("No data mate");
+                  }
+                  return ListView.builder(
+                    itemCount: appState.getContactsList!.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              child: TextButton.icon(
+                                  onPressed: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Chat(
+                                            user: appState.user!,
+                                            user2: appState
+                                                .getContactsList![index],
+                                            token: appState.token!),
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.person),
+                                  label:
+                                      Text(appState.getContactsList![index])),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+          ),
         ),
       ],
     );

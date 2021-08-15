@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mac_chat/LoadContacts.dart';
 import 'package:mac_chat/Messages.dart';
+import 'package:mac_chat/SignUp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,14 +21,15 @@ class OttoChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<UserState>(context);
+    // initialize app with data from config file
     initailizeApp();
-    // appState.setStateContacts();
     return MaterialApp(
       initialRoute: Login.id,
       routes: {
         // User
         // Chat.id: (context) => Chat(),
         Login.id: (context) => Login(),
+        SignUp.id: (context) => SignUp(),
         Messages.id: (context) => Messages(),
         AddContact.id: (context) => AddContact(),
         LoadContacts.id: (context) => LoadContacts(),
@@ -103,4 +105,18 @@ class UserState with ChangeNotifier {
   }
 
   List<String>? get getContactsList => _contactsList;
+
+  // Fetch login token
+  String? token;
+  fetchToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+  }
+
+  // Fetch current user name
+  String? user;
+  fetchUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    user = prefs.getString("user");
+  }
 }

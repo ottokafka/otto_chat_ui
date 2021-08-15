@@ -7,20 +7,27 @@ class Logout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextButton.icon(
-          onPressed: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.remove("token");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Login(),
-              ),
-            );
-          },
-          icon: Icon(Icons.logout),
-          label: Text("Logout")),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+          child: TextButton.icon(
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove("token");
+                prefs.remove("user");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Login(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.logout),
+              label: Text("Logout")),
+        ),
+      ],
     );
   }
 }

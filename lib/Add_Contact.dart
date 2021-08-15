@@ -24,10 +24,13 @@ class _AddContactState extends State<AddContact> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(8.0),
-      child: (_futureAlbum == null) ? buildColumn() : buildFutureBuilder(),
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(8.0),
+        child: (_futureAlbum == null) ? buildColumn() : buildFutureBuilder(),
+      ),
     );
   }
 

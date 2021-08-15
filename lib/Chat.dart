@@ -13,8 +13,10 @@ class Chat extends StatelessWidget {
   static const String id = "Chat";
   final String user;
   final String user2;
+  final String token;
 
-  const Chat({Key? key, required this.user, required this.user2})
+  const Chat(
+      {Key? key, required this.user, required this.user2, required this.token})
       : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class Chat extends StatelessWidget {
       body: ChatSetup(
         user: user,
         user2: user2,
+        token: token,
         channel: IOWebSocketChannel.connect(Config.websocketIP,
             headers: {"Authorization": token, "user": user, "user2": user2}),
       ),
@@ -42,13 +45,15 @@ class ChatSetup extends StatefulWidget {
   final WebSocketChannel channel;
   final String user;
   final String user2;
+  final String token;
 
-  ChatSetup({
-    Key? key,
-    required this.channel,
-    required this.user,
-    required this.user2,
-  }) : super(key: key);
+  ChatSetup(
+      {Key? key,
+      required this.channel,
+      required this.user,
+      required this.user2,
+      required this.token})
+      : super(key: key);
 
   @override
   _ChatSetupState createState() => _ChatSetupState();

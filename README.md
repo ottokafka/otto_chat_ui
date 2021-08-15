@@ -20,3 +20,7 @@ This app is powered by: otto chat api
 
 Can be found in my repo.
 
+
+
+NOTE: if You are using MaterialApp more then one time in your project, you should only have one instance of MaterialApp 
+as it holds your root configuration.
